@@ -1,0 +1,141 @@
+
+# 초기 설정
+
+0. 디렉토리 생성 VSC 이동
+
+1.package.json (초기화)
+npm init-y
+
+
+
+2. apollo graphql 설치
+
+npm i apollo-server graphql
+
+
+3. nodemon 설치
+
+npm i nodemon -D
+
+4. server.js , ignore파일 만들기
+<linux 명령어>
+touch server.js
+touch .gitignore
+
+
+5. gitignore 에 와서 node_modules 추가 > repo 초기화 한번 해주기 
+
+
+vsc) node_module/
+
+
+term)git init .
+
+6. package.json 의 test 를 dev 로 아래와 같이 변경
+
+"dev": "nodemon server.js" 
+
++) json 파일 제일 하단에 붙여주기(type이 모듈이다. 라고 해주는 것.)
+(p.s 이걸 안만들어 주면 import 문이 아닌 다른 문법을 사용해야한다.)
+
+  },
+  "type": "module"
+}
+
+
+7.server.js 파일로 이동해서 apolloserver gql 을 apollo server 로 부터 import 해준다
+
+import {ApolloServer, gql} from "apollo-server"
+// const { ApolloServer, gql } = require("apollo-server") 로 대체 가능 
+
+8. npm run dev 명령어 로 작동이 되는지 확인 해보기 
+nodemon 이 작동 하면 성공
+
+(server.js 파일을 저장할때 마다 nodemon이 서버를 새로 시작하게 되었다.)
+________________________________________________________________________
+
+# 서버만들기,코드 설명
+
+
+server.js >
+
+
+
+const server = new ApolloServer({})
+//listen() 은 promise 
+server.listen().then(({url})=>{
+//url을 받아옴.
+
+//console.log(`Running on ${url}`); 오류를 발생시킬것 . 
+//직역 : 아폴로 서버는 존재하는 schema, moudule or typeDefs 를 가져야 한다 .
+// (에러를 만들어 학습하는 과정임.)
+})
+shape>
+const typeDefs = gql``
+
+
+// 쿼리 타입을 설명해주는 것은 필수다.
+const typeDefs = gql`
+type Query {
+    text: String
+    hello: String
+}
+`;
+작성이 잘 되었다면 , localhost:4000에 studio 접속이 가능하게 된다.
+
+http://localhost:4000/
+
+
+
+
+
+
+type User {
+//유저에 의한
+    id:ID
+    text:String
+}
+
+
+
+type Tweet {
+    id:ID
+    text:String
+    author:User
+}
+type Query {
+//실행되지 않는 .
+    allTweets:[Tweet]
+    tweet(id:ID): Tweet // 어떤 field 가 return 될지 에 대한 설명.
+}
+`;
+
+
+
+
+type Mutation {
+    postTweet(text:String, userId: ID): Tweet
+}
+// user가 tweet 을 post 할수 있게 해주는것.
+// user가 tweet 을 post 하려면, tweet 의 내용을 줘야한다.ex.text:String
+`;
+
+
+
+
+studio >
+맨위 상단의 query 는 default 이기 때문에 써줄 필요 x
+mutation 호출을 원한다면, mutation을 써주어야 한다.
+가지고 있는 mutaion 사용 (postTweet)
+*mutation : urldp POST request 를 쓸 수 있도록 해주는 것.
+
+"!" 느낌표는 graphql에게 이 field들이 null 이면 안된다라는 것을 알려주는것.
+
+
+https://altair-gql.sirmuel.design/
+샌드박스 와 사용방법 동일 
+
+$ npm i node-fetch 설치 
+
+
+
